@@ -7,11 +7,11 @@
 
 // Estrutura da peça
 typedef struct {
-    char tipo;  // tipo da peça (ex: 'I', 'O', 'T', 'L', 'Z')
-    int id;     // identificador sequencial
+    char tipo;
+    int id;
 } Peca;
 
-// Estrutura da fila circular
+// -------- Fila Circular --------
 typedef struct {
     Peca elementos[TAM_FILA];
     int frente;
@@ -25,8 +25,7 @@ typedef struct {
     int topo;
 } Pilha;
 
-// ---------- Funções da fila ----------
-
+// ---------- Funções da Fila ----------
 void inicializarFila(Fila *f) {
     f->frente = 0;
     f->tras = -1;
@@ -41,7 +40,6 @@ int filaCheia(Fila *f) {
     return (f->total == TAM_FILA);
 }
 
-// Gera uma peça com tipo aleatório e ID sequencial
 Peca gerarPeca(int id) {
     Peca nova;
     char tipos[] = {'I', 'O', 'T', 'L', 'Z'};
@@ -50,31 +48,22 @@ Peca gerarPeca(int id) {
     return nova;
 }
 
-// Insere no final da fila
 void enqueue(Fila *f, Peca p) {
-    if (filaCheia(f)) {
-        printf("\n⚠️ Fila cheia!\n");
-        return;
-    }
+    if (filaCheia(f)) return;
     f->tras = (f->tras + 1) % TAM_FILA;
     f->elementos[f->tras] = p;
     f->total++;
 }
 
-// Remove da frente da fila
 Peca dequeue(Fila *f) {
     Peca removida = {'-', -1};
-    if (filaVazia(f)) {
-        printf("\n⚠️ Fila vazia!\n");
-        return removida;
-    }
+    if (filaVazia(f)) return removida;
     removida = f->elementos[f->frente];
     f->frente = (f->frente + 1) % TAM_FILA;
     f->total--;
     return removida;
 }
 
-// Mostra o conteúdo da fila
 void mostrarFila(Fila *f) {
     printf("\n🧱 Fila de Peças Futuras:\n");
     if (filaVazia(f)) {
@@ -131,6 +120,48 @@ void mostrarPilha(Pilha *p) {
     }
 }
 
+// ---------- Trocas entre Fila e Pilha ----------
+
+// Opção 4 - Trocar peça da frente da fila com o topo da pilha
+void trocarFrenteTopo(Fila *f, Pilha *p) {
+    if (filaVazia(f)) {
+        printf("\n⚠️ Fila vazia! Nenhuma peça para trocar.\n");
+        return;
+    }
+    if (pilhaVazia(p)) {
+        printf("\n⚠️ Pilha vazia! Nenhuma peça para trocar.\n");
+        return;
+    }
+
+    int indiceFrente = f->frente;
+    Peca temp = f->elementos[indiceFrente];
+    f->elementos[indiceFrente] = p->elementos[p->topo];
+    p->elementos[p->topo] = temp;
+
+    printf("\n🔄 Troca realizada entre frente da fila e topo da pilha!\n");
+}
+
+// Opção 5 - Trocar 3 primeiros da fila com as 3 da pilha
+void trocarTres(Fila *f, Pilha *p) {
+    if (p->topo != 2) { // pilha deve ter exatamente 3 peças
+        printf("\n⚠️ A pilha precisa ter 3 peças para realizar essa troca.\n");
+        return;
+    }
+    if (f->total < 3) {
+        printf("\n⚠️ A fila precisa ter pelo menos 3 peças para trocar.\n");
+        return;
+    }
+
+    for (int i = 0; i < 3; i++) {
+        int indiceFila = (f->frente + i) % TAM_FILA;
+        Peca temp = f->elementos[indiceFila];
+        f->elementos[indiceFila] = p->elementos[i];
+        p->elementos[i] = temp;
+    }
+
+    printf("\n🔁 Troca das 3 primeiras peças da fila com as 3 da pilha realizada!\n");
+}
+
 // ---------- Função principal ----------
 int main() {
     srand(time(NULL));
@@ -156,6 +187,8 @@ int main() {
         printf("1 - Jogar peça (remover da frente)\n");
         printf("2 - Enviar peça da fila para a reserva (pilha)\n");
         printf("3 - Usar peça da reserva (remover do topo da pilha)\n");
+        printf("4 - Trocar peça da frente com topo da pilha\n");
+        printf("5 - Trocar 3 primeiros da fila com as 3 da pilha\n");
         printf("0 - Sair\n");
         printf("Escolha: ");
         scanf("%d", &opcao);
@@ -186,6 +219,14 @@ int main() {
             if (usada.id != -1) {
                 printf("\n🎯 Peça usada da reserva: Tipo %c | ID %d\n", usada.tipo, usada.id);
             }
+        }
+
+        else if (opcao == 4) {
+            trocarFrenteTopo(&fila, &pilha);
+        }
+
+        else if (opcao == 5) {
+            trocarTres(&fila, &pilha);
         }
 
     } while (opcao != 0);
