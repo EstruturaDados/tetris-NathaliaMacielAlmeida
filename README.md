@@ -3,8 +3,9 @@
 🎮 Desafio Tetris Stack - Controle de Peças com Estruturas de Dados
 
 Projeto desenvolvido por Nathalia Bento Maciel
-Curso: Sistemas de Informação – Estácio
+Curso: Sistemas de Informação – Estácio.
 Implementei todos os níveis (Novato, Aventureiro e Mestre), integrando fila circular, pilha e funcionalidades avançadas de manipulação de peças.
+
 
 Bem-vindo ao desafio **"Tetris Stack"**! Neste jogo inspirado nas mecânicas clássicas de montagem de peças, o jogador deve organizar, reservar e manipular peças em tempo real. Para isso, você, como programador, será responsável por implementar as estruturas de controle que regem a lógica das peças.
 
